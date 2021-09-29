@@ -11,3 +11,17 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.card_body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.margin_right {
+  margin-right: 5px;
+}
+
+.crossed_line {
+  text-decoration: line-through;
+}

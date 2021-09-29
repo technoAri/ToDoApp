@@ -6,9 +6,10 @@ import { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Axios from "axios";
+import { RiDeleteBin6Line } from 'react-icons/ri'
+import { MdDone } from 'react-icons/md'
 
-
-const gitHubUrl = "http://localhost:3000/createdb";
+const gitHubUrl = "http://localhost:3000/get_items";
 
 function Todo({ todo, index, markTodo, removeTodo }) {
   return (
@@ -45,7 +46,7 @@ function FormTodo({ addTodo }) {
     }
     axios({
       method: 'post',
-      url: 'http://localhost:3000/postItem',
+      url: 'http://localhost:3000/post_item',
       data: payload, // you are sending body instead
       headers: {
         // 'Authorization': `bearer ${token}`,
@@ -102,51 +103,65 @@ function App() {
     setTodos(newTodos);
   };
 
-  const removeTodo = index => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
-  };
+  function removeItem(id) {
+    console.log('remove called', id);
+    const payload = {
+      id: id,
+    }
+    axios({
+      method: 'post',
+      url: 'http://localhost:3000/remove_item',
+      data: payload, // you are sending body instead
+      headers: {
+        // 'Authorization': `bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    // setValue("");
+    window.location.reload();
+  }
+
+  function updateItem(id) {
+    console.log('update called', id);
+    const payload = {
+      id: id,
+    }
+    axios({
+      method: 'post',
+      url: 'http://localhost:3000/update_item',
+      data: payload, // you are sending body instead
+      headers: {
+        // 'Authorization': `bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+    })
+    window.location.reload();
+  }
 
   return (
     <div className="app">
       <div className="container">
         <h1 className="text-center mb-4">Todo List</h1>
         <FormTodo addTodo={addTodo} />
-        {/* <div>
-          {todos.map((todo, index) => (
-            <Card>
-              <Card.Body>
-                <Todo
-                key={index}
-                index={index}
-                todo={todo.title}
-                markTodo={markTodo}
-                removeTodo={removeTodo}
-                />
-              </Card.Body>
-            </Card>
-          ))}
-        </div> */}
         <div>
           {todos.map((todo) => (
             <Card>
-              <Card.Body>
-                <p key={todo.id}>{todo.title}</p>
+              <Card.Body className="card_body">
+                {todo.isDone ? (
+                  <p className="crossed_line" key={todo.id}>{todo.title}</p>
+                ) : (
+                  <p key={todo.id}>{todo.title}</p>
+                )}
+                <div>
+                  <MdDone className="margin_right" onClick={() => updateItem(todo.id)}></MdDone>
+                  <RiDeleteBin6Line onClick={() => removeItem(todo.id)}></RiDeleteBin6Line>
+                </div>
               </Card.Body>
             </Card>
           ))}
         </div>
       </div>
     </div>
-
-    // <div>
-    //   <div>
-    //   {todos.map((todo) => (
-    //     <p key={todo.id}>{todo.title}</p>
-    //   ))}
-    // </div>
-    // </div>
   );
 }
 
